@@ -6,10 +6,11 @@ on:
 
 jobs:
   check-code:
+    name: Ansible Lint
     runs-on: ubuntu-latest
     steps:
-      - name: Скачиваем наш код из репозитория
+      - name: 1. Скачиваем наш код из репозитория
         uses: actions/checkout@v4
 
-      - name: Запускаем линтер для проверки ошибок
-        uses: ansible/ansible-lint-action@v6
+      - name: 2. Запускаем официальный линтер Ansible
+        uses: ansible-actions/ansible-lint-action@v1.0.3
