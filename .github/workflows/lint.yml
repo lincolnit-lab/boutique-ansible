@@ -1,17 +1,16 @@
 name: Проверка Ansible Плейбука
 
-# Робот запускается при каждом git push в ветку main
 on:
   push:
     branches: [ main ]
 
 jobs:
   check-code:
-    runs-on: ubuntu-latest # Робот включит чистую виртуальную машину Ubuntu в облаке GitHub
+    runs-on: ubuntu-latest
 
     steps:
     - name: 1. Скачиваем наш код из репозитория
       uses: actions/checkout@v4
 
     - name: 2. Запускаем линтер для проверки ошибок в Ansible
-      uses: ansiblesig/ansible-lint-action@v1
+      uses: ansible/ansible-lint-action@main
