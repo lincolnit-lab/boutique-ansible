@@ -13,4 +13,4 @@ jobs:
       uses: actions/checkout@v4
 
     - name: 2. Запускаем линтер для проверки ошибок в Ansible
-      uses: ansible/ansible-lint-action@main
+      uses: ansible/ansible-lint-action@v6
