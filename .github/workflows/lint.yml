@@ -8,10 +8,8 @@ jobs:
   check-code:
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Скачиваем наш код из репозитория
+      - name: Скачиваем наш код из репозитория
         uses: actions/checkout@v4
 
-      - name: 2. Устанавливаем и запускаем ansible-lint
-        run: |
-          pip3 install ansible-lint
-          ansible-lint deploy.yml
+      - name: Запускаем линтер для проверки ошибок
+        uses: ansible/ansible-lint-action@v6
