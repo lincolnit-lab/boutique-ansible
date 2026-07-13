@@ -1,0 +1,79 @@
+version: '3.8'
+
+x-logging: &default-logging
+  logging:
+    driver: loki
+    options:
+      loki-url: "http://localhost:3100/loki/api/v1/push"
+
+services:
+  # === ИНФРАСТРУКТУРА МОНИТОРИНГА ===
+  loki:
+    image: grafana/loki:2.9.2
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  grafana:
+    image: grafana/grafana:10.2.3
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - loki
+
+  # === СЕРВИСЫ ИНТЕРНЕТ-МАГАЗИНА ===
+  redis-cart:
+    image: redis:7-alpine
+    container_name: redis-cart
+    ports:
+      - "6380:6379"
+    <<: *default-logging
+
+  cartservice:
+    build:
+      context: ./src/cartservice/src
+      dockerfile: Dockerfile
+    container_name: cartservice
+    environment:
+      - REDIS_ADDR=redis-cart:6379
+      - PORT=7070
+    depends_on:
+      - redis-cart
+    <<: *default-logging
+
+  productcatalogservice:
+    build:
+      context: ./src/productcatalogservice
+    container_name: productcatalogservice
+    environment:
+      - PORT=3550
+    ports:
+      - "3550:3550"
+    <<: *default-logging
+
+  frontend:
+    build:
+      context: ./src/frontend
+    container_name: frontend
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - CART_SERVICE_ADDR=cartservice:7070
+      - PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
+      - CURRENCY_SERVICE_ADDR=currencyservice:7000
+      - SHIPPING_SERVICE_ADDR=shippingservice:50051
+      - CHECKOUT_SERVICE_ADDR=checkoutservice:5050
+      - AD_SERVICE_ADDR=adservice:9555
+      - RECOMMENDATION_SERVICE_ADDR=recommendationservice:8080
+      - REVIEWS_SERVICE_ADDR=reviewsservice:8080
+      - ACCOUNT_SERVICE_ADDR=accountservice:8080
+      - SHOPPING_ASSISTANT_SERVICE_ADDR=shoppingassistantservice:8080
+    depends_on:
+      - cartservice
+      - productcatalogservice
+    <<: *default-logging

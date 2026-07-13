@@ -1,0 +1,42 @@
+---
+- name: Полный деплой интернет-магазина и мониторинга
+  hosts: boutique_server
+  become: true
+
+  tasks:
+    - name: 1. Убеждаемся, что Docker установлен и запущен
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: 2. Проверяем, установлен ли плагин Loki для Docker
+      ansible.builtin.command: docker plugin inspect loki
+      register: loki_plugin_check
+      failed_when: false
+      changed_when: false
+
+    - name: 3. Устанавливаем плагин Loki, если его не было
+      ansible.builtin.command: docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+      when: loki_plugin_check.rc != 0
+
+    - name: 4. Создаем целевую директорию для приложения на ноутбуке
+      ansible.builtin.file:
+        path: /home/qadmin/microservices-demo
+        state: directory
+        owner: qadmin
+        group: qadmin
+        mode: '0755'
+
+    - name: 5. Копируем актуальный docker-compose.yml с компьютера на ноутбук
+      ansible.builtin.copy:
+        src: ./docker-compose.yml
+        dest: /home/qadmin/microservices-demo/docker-compose.yml
+        owner: qadmin
+        group: qadmin
+        mode: '0644'
+
+    - name: 6. Запускаем весь стек контейнеров через Docker Compose
+      community.docker.docker_compose_v2:
+        project_src: /home/qadmin/microservices-demo
+        state: present
