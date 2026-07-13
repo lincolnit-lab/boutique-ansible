@@ -7,6 +7,9 @@ on:
 jobs:
   check-code:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      statuses: write
     steps:
       - name: 1. Скачиваем наш код из репозитория
         uses: actions/checkout@v4
