@@ -2,7 +2,6 @@
 - name: Полный деплой интернет-магазина и мониторинга
   hosts: boutique_server
   become: true
-
   tasks:
     - name: 1. Убеждаемся, что Docker установлен и запущен
       ansible.builtin.systemd:
@@ -10,15 +9,13 @@
         state: started
         enabled: true
 
-    - name: 2. Проверяем, установлен ли плагин Loki для Docker
-      ansible.builtin.command: docker plugin inspect loki
-      register: loki_plugin_check
-      failed_when: false
-      changed_when: false
-
-    - name: 3. Устанавливаем плагин Loki, если его не было
-      ansible.builtin.command: docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
-      when: loki_plugin_check.rc != 0
+    - name: 2. Устанавливаем и активируем плагин Loki для Docker
+      community.docker.docker_plugin:
+        plugin_name: grafana/loki-docker-driver:latest
+        alias: loki
+        state: present
+        # plugin_args передает дополнительные параметры, если модуль их поддерживает,
+        # но для --grant-all-permissions обычно достаточно дефолтного поведения или параметров модуля.
 
     - name: 4. Создаем целевую директорию для приложения на ноутбуке
       ansible.builtin.file:
