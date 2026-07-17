@@ -1,18 +1,30 @@
-name: Проверка Ansible Плейбука
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
-  check-code:
-    name: Ansible Lint
+  lint:
+    name: 1. Статический анализ (Lint)
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Скачиваем наш код из репозитория
+      - name: Чеккаут кода
         uses: actions/checkout@v4
 
-      - name: 2. Запускаем официальный линтер Ansible
+      - name: Запуск Ansible Lint
         uses: ansible-actions/ansible-lint-action@v1.0.3
         with:
-          target: deploy.yml
+          target: deploy.yml  # Оставили вашу рабочу slowed-настройку
+
+  deploy:
+    name: 2. Автоматический деплой на ноутбук
+    needs: lint
+    runs-on: [self-hosted, my-laptop]
+    steps:
+      - name: Чеккаут актуального кода на ноутбук
+        uses: actions/checkout@v4
+
+      - name: Запуск Ansible деплоя локально
+        run: |
+          ansible-playbook -i hosts.ini deploy.yml
