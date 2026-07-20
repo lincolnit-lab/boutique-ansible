@@ -27,4 +27,4 @@ jobs:
 
       - name: Запуск Ansible деплоя локально
         run: |
-          ansible-playbook -i hosts.ini deploy.yml --connection=local
+          sudo ansible-playbook -i hosts.ini deploy.yml --connection=local
