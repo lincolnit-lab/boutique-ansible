@@ -36,7 +36,7 @@
         group: qadmin
         mode: '0644'
 
- -    name: 6. Очищаем старый конфликтующий стек контейнеров (Bypass)
+    - name: 6. Очищаем старый конфликтующий стек контейнеров (Bypass)
       community.docker.docker_compose_v2:
         project_src: /home/qadmin/microservices-demo
         state: absent
