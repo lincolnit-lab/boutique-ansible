@@ -40,7 +40,7 @@
       community.docker.docker_compose_v2:
         project_src: /home/qadmin/microservices-demo
         state: absent
-        failed_when: false
+      failed_when: false
 
     - name: 7. Запускаем весь стек контейнеров через Docker Compose
       community.docker.docker_compose_v2:
