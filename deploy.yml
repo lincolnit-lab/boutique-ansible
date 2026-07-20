@@ -37,7 +37,7 @@
         mode: '0644'
 
     - name: 6. Очищаем старый конфликтующий стек контейнеров через CLI (Bypass)
-      ansible.builtin.command: docker rm -f frontend loki grafana cartservice currencyservice productcatalogservice redis-cart postgres
+      ansible.builtin.command: docker compose -f /home/qadmin/microservices-demo/docker-compose.yml down --volumes --remove-orphans
       failed_when: false
       changed_when: true
 
