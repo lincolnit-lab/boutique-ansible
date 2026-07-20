@@ -81,7 +81,7 @@ services:
     build:
       context: ./src/frontend
     container_name: frontend
-    newtorks:
+    networks:
       - boutique-net
     ports:
       - "8080:8080"
