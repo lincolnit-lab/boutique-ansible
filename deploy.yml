@@ -46,3 +46,4 @@
         project_src: /home/qadmin/microservices-demo
         state: present
         build: policy
+        recreate: always
