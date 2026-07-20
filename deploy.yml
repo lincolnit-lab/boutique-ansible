@@ -36,15 +36,13 @@
         group: qadmin
         mode: '0644'
 
-    - name: 6. Очищаем старый конфликтующий стек контейнеров (Bypass)
-      community.docker.docker_compose_v2:
-        project_src: /home/qadmin/microservices-demo
-        state: absent
+    - name: 6. Очищаем старый конфликтующий стек контейнеров через CLI (Bypass)
+      ansible.builtin.command: docker rm -f frontend loki grafana cartservice currencyservice productcatalogservice redis-cart postgres
       failed_when: false
+      changed_when: true
 
-    - name: 7. Запускаем весь стек контейнеров через Docker Compose
+    - name: 7. Запускаем весь стек контейнеров через Docker Compose с нуля
       community.docker.docker_compose_v2:
         project_src: /home/qadmin/microservices-demo
         state: present
         build: policy
-        recreate: always
