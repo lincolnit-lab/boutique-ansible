@@ -36,7 +36,13 @@
         group: qadmin
         mode: '0644'
 
-    - name: 6. Запускаем весь стек контейнеров через Docker Compose
+ -    name: 6. Очищаем старый конфликтующий стек контейнеров (Bypass)
+      community.docker.docker_compose_v2:
+        project_src: /home/qadmin/microservices-demo
+        state: absent # <--- Это полностью удалит все старые контейнеры и освободит имена
+        failed_when: false # <--- Если контейнеров не было, Ansible не упадет, а пойдет дальше
+        
+    - name: 7. Запускаем весь стек контейнеров через Docker Compose
       community.docker.docker_compose_v2:
         project_src: /home/qadmin/microservices-demo
         state: present
