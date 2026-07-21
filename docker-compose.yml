@@ -100,7 +100,7 @@ services:
       - shippingservice
     <<: *default-logging
 
-  networks:
-    default:
-      name: boutique-net
-      driver: bridge
+networks:
+  default:
+    name: boutique-net
+    driver: bridge
