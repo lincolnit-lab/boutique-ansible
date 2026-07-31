@@ -61,9 +61,9 @@ services:
     container_name: currencyservice
     environment:
       - PORT=7000
+      - DISABLE_PROFILER=1
     ports:
       - "7000:7000"
-      - DISABLE_PROFILER=1
     <<: *default-logging
 
   shippingservice:
