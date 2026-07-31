@@ -102,11 +102,6 @@ services:
       - shippingservice
     <<: *default-logging
 
-networks:
-  default:
-    name: boutique-net
-    driver: bridge
-
   adservice:
     image: gcr.io/google-samples/microservices-demo/adservice:v0.8.0
     container_name: adservice
@@ -114,13 +109,20 @@ networks:
       - "9555:9555"
     environment:
       - PORT=9555
-    <<: *default-logging # <-- Добавили сбор логов в Loki
+    <<: *default-logging
 
   recommendationservice:
     image: gcr.io/google-samples/microservices-demo/recommendationservice:v0.8.0
     container_name: recommendationservice
     ports:
-      - "8085:8080" # <-- Изменили внешний порт на 8085, чтобы не было конфликта с фронтендом
+      - "8085:8080"
     environment:
       - PORT=8080
-    <<: *default-logging # <-- Добавили сбор логов в Loki
+    <<: *default-logging
+
+networks:
+  default:
+    name: boutique-net
+    driver: bridge
+
+
