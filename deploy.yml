@@ -26,6 +26,6 @@
         mode: '0755'
 
     - name: 6. Деплоим манифесты в Kubernetes (Minikube)
-      ansible.builtin.command: /snap/bin/kubectl apply -f /home/qadmin/microservices-demo/kubernetes-manifests/
+      ansible.builtin.command: /snap/bin/kubectl apply -f /home/qadmin/microservices-demo/kubernetes-manifests/ --validate=false
       become: false # Выполняем от пользователя qadmin, так как Minikube запущен у него
       changed_when: true
