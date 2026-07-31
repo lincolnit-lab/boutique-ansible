@@ -23,6 +23,8 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - loki
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
 
   # === СЕРВИСЫ ИНТЕРНЕТ-МАГАЗИНА ===
   redis-cart:
@@ -80,7 +82,7 @@ services:
       context: ./src/frontend
     container_name: frontend
     ports:
-      - "8080:8080"
+      - "8080:9999"
     environment:
       - PORT=8080
       - CART_SERVICE_ADDR=cartservice:7070
