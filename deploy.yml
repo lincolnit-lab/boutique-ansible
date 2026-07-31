@@ -1,5 +1,5 @@
 ---
-- name: Полный деплой интернет-магазина и мониторинга
+- name: Полный деплой интернет-магазина и мониторинга в Kubernetes
   hosts: boutique_server
   become: true
   tasks:
@@ -9,17 +9,6 @@
         state: started
         enabled: true
 
-    - name: 2. Проверяем, установлен ли плагин Loki для Docker
-      ansible.builtin.command: docker plugin inspect loki
-      register: loki_plugin_check
-      failed_when: false
-      changed_when: false
-
-    - name: 3. Устанавливаем плагин Loki, если его не было
-      ansible.builtin.command: docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
-      when: loki_plugin_check.rc != 0
-      changed_when: true
-
     - name: 4. Создаем целевую директорию для приложения на ноутбуке
       ansible.builtin.file:
         path: /home/qadmin/microservices-demo
@@ -28,32 +17,15 @@
         group: qadmin
         mode: '0755'
 
-    - name: 5. Копируем актуальный docker-compose.yml с компьютера на ноутбук
+    - name: 5. Копируем все манифесты Kubernetes на ноутбук
       ansible.builtin.copy:
-        src: ./docker-compose.yml
-        dest: /home/qadmin/microservices-demo/docker-compose.yml
-        owner: qadmin
-        group: qadmin
-        mode: '0644'
-
-    # ==================== НОВЫЙ ШАГ ТУТ ====================
-    - name: 5.2. Копируем файлы конфигурации Grafana на ноутбук
-      ansible.builtin.copy:
-        src: ./grafana/
-        dest: /home/qadmin/microservices-demo/grafana/
+        src: ./kubernetes-manifests/
+        dest: /home/qadmin/microservices-demo/kubernetes-manifests/
         owner: qadmin
         group: qadmin
         mode: '0755'
-    # =======================================================
 
-    - name: 6. Очищаем старый конфликтующий стек контейнеров через CLI (Bypass)
-      ansible.builtin.command: docker compose -f /home/qadmin/microservices-demo/docker-compose.yml down --volumes --remove-orphans
-      failed_when: false
+    - name: 6. Деплоим манифесты в Kubernetes (Minikube)
+      ansible.builtin.command: /usr/local/bin/kubectl apply -f /home/qadmin/microservices-demo/kubernetes-manifests/
+      become: false # Выполняем от пользователя qadmin, так как Minikube запущен у него
       changed_when: true
-
-    - name: 7. Запускаем весь стек контейнеров через Docker Compose с нуля
-      community.docker.docker_compose_v2:
-        project_src: /home/qadmin/microservices-demo
-        state: present
-        build: always
-        recreate: always
