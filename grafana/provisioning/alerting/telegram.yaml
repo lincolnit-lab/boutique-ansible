@@ -1,0 +1,28 @@
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: Microservices-Alerts
+    folder: Infrastructure
+    interval: 1m
+    rules:
+      - uid: frontend_errors_clear
+        title: Frontend-Docker-Errors
+        condition: A
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: loki
+            model:
+              expr: 'count_over_time({container_name="frontend"} |= "error" [5m])'
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+        noDataState: OK
+        execErrState: OK
+        for: 1m
+        annotations:
+          summary: "Обнаружены ошибки в логах Frontend!"
+        labels:
+          notifications: Telegram-Channel

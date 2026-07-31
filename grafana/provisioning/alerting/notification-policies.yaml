@@ -1,0 +1,19 @@
+apiVersion: 1
+contactPoints:
+  - orgId: 1
+    name: Telegram-Channel
+    receivers:
+      - uid: telegram_receiver
+        type: telegram
+        settings:
+          bottoken: "8866881389:AAFRPS3dWyEWH791K1fMvDjRnNwu-IDhfH4"
+          chatid: "8854742193"
+        disableResolveMessage: false
+
+policies:
+  - orgId: 1
+    receiver: Telegram-Channel
+    groupBy: ['alertname', 'cluster']
+    groupWait: 10s
+    groupInterval: 5m
+    repeatInterval: 4h

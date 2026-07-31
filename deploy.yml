@@ -36,6 +36,16 @@
         group: qadmin
         mode: '0644'
 
+    # ==================== НОВЫЙ ШАГ ТУТ ====================
+    - name: 5.2. Копируем файлы конфигурации Grafana на ноутбук
+      ansible.builtin.copy:
+        src: ./grafana/
+        dest: /home/qadmin/microservices-demo/grafana/
+        owner: qadmin
+        group: qadmin
+        mode: '0755'
+    # =======================================================
+
     - name: 6. Очищаем старый конфликтующий стек контейнеров через CLI (Bypass)
       ansible.builtin.command: docker compose -f /home/qadmin/microservices-demo/docker-compose.yml down --volumes --remove-orphans
       failed_when: false
@@ -47,4 +57,3 @@
         state: present
         build: always
         recreate: always
-
