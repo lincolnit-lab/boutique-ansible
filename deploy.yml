@@ -27,5 +27,7 @@
 
     - name: 6. Деплоим манифесты в Kubernetes (Minikube)
       ansible.builtin.command: /snap/bin/kubectl apply -f /home/qadmin/microservices-demo/kubernetes-manifests/ --validate=false
-      become: false # Выполняем от пользователя qadmin, так как Minikube запущен у него
+      environment:
+        KUBECONFIG: /home/qadmin/.kube/config # <-- ЯВНО УКАЗЫВАЕМ ПУТЬ К КЛАСТЕРУ
+      become: false # Выполняем от пользователя qadmin
       changed_when: true
