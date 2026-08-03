@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: server
+          # 1. ОТКУДА СКАЧАТЬ: Официальный образ фронтенда от Google
+          image: gcr.io/google-samples/microservices-demo/frontend:v0.8.0
+
+          # 2. КУДА СТУЧАТЬСЯ: Фронтенд магазина по умолчанию работает на порту 8080
+          ports:
+            - containerPort: 8080
+
+          # 3. НАСТРОЙКИ: Самая важная часть — связываем Фронтенд с вашей Корзиной
+          env:
+            - name: PORT
+              value: "8080"
+            - name: CART_SERVICE_ADDR
+              value: "cartservice:7070" # <-- Имя вашего Service из первого шага!
+
+          # 4. КОНТРОЛЬ ПУЛЬСА: Проверки здоровья (как у корзины)
+          readinessProbe:
+            initialDelaySeconds: 15
+            httpGet:
+              path: "/_healthz" # У фронтенда проверка идет через обычный веб-сайт
+              port: 8080
+          livenessProbe:
+            initialDelaySeconds: 15
+            httpGet:
+              path: "/_healthz"
+              port: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: frontend
+  ports:
+    - port: 8080
+      targetPort: 8080
