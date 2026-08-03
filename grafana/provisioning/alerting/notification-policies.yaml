@@ -6,10 +6,9 @@ contactPoints:
       - uid: telegram_receiver
         type: telegram
         settings:
-          bottoken: "8866881389:AAFRPs3dWyEwH791K1fMvDjRnMwu-IDhfH4"
-          chatid: "8854742193"
-        disableResolveMessage: false
-
+          bottoken: "{{ tg_bot_token }}"
+          chatid: "{{ tg_chat_id }}"
+          disableResolveMessage: false
 policies:
   - orgId: 1
     receiver: Telegram-Channel
