@@ -30,4 +30,5 @@
       environment:
         KUBECONFIG: /home/qadmin/.kube/config # <-- ЯВНО УКАЗЫВАЕМ ПУТЬ К КЛАСТЕРУ
       become: false # Выполняем от пользователя qadmin
+      ignore_errors: true
       changed_when: true
