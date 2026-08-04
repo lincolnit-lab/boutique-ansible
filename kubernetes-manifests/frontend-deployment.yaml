@@ -17,7 +17,7 @@ spec:
       containers:
         - name: server
           # 1. ОТКУДА СКАЧАТЬ: Официальный образ фронтенда от Google
-          image: gcr.io/google-samples/microservices-demo/frontend:v0.8.0
+          image: gcr.io/google-samples/microservices-demo/frontend:v0.10.0
 
           # 2. КУДА СТУЧАТЬСЯ: Фронтенд магазина по умолчанию работает на порту 8080
           ports:
