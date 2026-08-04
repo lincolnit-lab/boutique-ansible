@@ -31,18 +31,7 @@ spec:
             limits:
               cpu: 200m
               memory: 128Mi
-          readinessProbe:
-            initialDelaySeconds: 45
-            periodSeconds: 10
-            failureThreshold: 5
-            exec:
-              command: ["/bin/grpc_health_probe", "-addr=:3550"]
-          livenessProbe:
-            initialDelaySeconds: 45
-            periodSeconds: 10
-            failureThreshold: 5
-            exec:
-              command: ["/bin/grpc_health_probe", "-addr=:3550"]
+
 ---
 apiVersion: v1
 kind: Service
