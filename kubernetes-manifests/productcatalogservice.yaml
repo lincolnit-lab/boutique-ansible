@@ -22,7 +22,7 @@ spec:
           env:
             - name: PORT
               value: "3550"
-            - name: DISABLE_PROFILER  # СЮДА ДОБАВЛЯЕМ ОТКЛЮЧЕНИЕ ПРОФИЛИРОВЩИКА
+            - name: disable_profiler  # СЮДА ДОБАВЛЯЕМ ОТКЛЮЧЕНИЕ ПРОФИЛИРОВЩИКА
               value: "1"
           resources:
             requests:
