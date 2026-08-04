@@ -31,7 +31,7 @@ spec:
               value: "cartservice:7070"
             # ЗАГЛУШКИ ДЛЯ ОСТАЛЬНЫХ СЕРВИСОВ (ЧТОБЫ НЕ БЫЛО ПАНИКИ):
             - name: PRODUCT_CATALOG_SERVICE_ADDR
-              value: "localhost:3550"
+              value: "productcatalogservice:3550"
             - name: CURRENCY_SERVICE_ADDR
               value: "currencyservice:7000"
             - name: SHIPPING_SERVICE_ADDR
